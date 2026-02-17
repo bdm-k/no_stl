@@ -4,6 +4,23 @@ the scope to C++20 for now.
 
 ## optional
 
+### optional
+
 | Feature | std | no_stl |
 | ------- | --- | ------ |
-| `optional::value()` | Throws `std::bad_optional_access` if *this* optional does not contain a value. | The behavior is undefined if *this* optional does not contain a value (as with `operator*`). |
+| `value()` | Throws `std::bad_optional_access` if *this* optional does not contain a value. | The behavior is undefined if *this* optional does not contain a value (as with `operator*`). |
+
+## memory
+
+### allocator
+
+| Feature | std | no_stl |
+| ------- | --- | ------ |
+| `allocate()` | Throws `std::bad_alloc` if allocation fails. | Returns `std::nullptr` if allocation fails. |
+
+Currently, the `no_stl::allocator` implementation relies on the following external functions:
+
+- `void * operator new(std::size_t count, std::align_val_t al, const std::nothrow_t & tag) noexcept;`
+- `void operator delete(void * ptr, std::size_t sz) noexcept;`
+
+To achieve `no_stl`'s goal of being truly header-only, we plan to introduce an alternative that uses a static memory region defined by `no_stl` for all allocations. Moreover, this no-dependency approach will be made the default option.
