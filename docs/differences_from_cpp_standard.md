@@ -32,6 +32,6 @@ To achieve `no_stl`'s goal of being truly header-only, we plan to introduce an a
 | Feature | std | no_stl |
 | ------- | --- | ------ |
 | `operator=`<br/>`swap()` | Strong exception guarantee is provided. | No exception guarantee is provided. |
-| `value()` | Throws `std::bad_expected_access` if *this* contains an unexpected value. | The behavior is undefined if *this* contains an unexpected value(as with `operator*`). |
+| `value()` | Throws `std::bad_expected_access` if *this* contains an unexpected value. | The behavior is undefined if *this* contains an unexpected value (as with `operator*`). |
 
 No exception guarantee is provided for `operator=` and `swap()`, because offering one would require using try-catch blocks.

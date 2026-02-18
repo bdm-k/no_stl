@@ -69,7 +69,7 @@ public:
 
   // non-member functions
   template <typename Err>
-  friend constexpr bool operator==(unexpected & x, unexpected<Err> & y)
+  friend constexpr bool operator==(const unexpected & x, const unexpected<Err> & y)
   {
     return x.error() == y.error();
   }

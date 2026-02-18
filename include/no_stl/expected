@@ -563,6 +563,9 @@ template <typename T, typename E>
   requires std::is_void_v<T>
 class expected<T, E>
 {
+  template <typename, typename>
+  friend class expected;
+
   optional<E> unex_opt_;
 
 public:
@@ -621,7 +624,7 @@ public:
     unex_opt_.emplace(std::forward<Args>(args)...);
   }
   template <typename U, typename... Args>
-  constexpr explicit expected(unexpect_t, std::initializer_list<U> & ilist, Args &&... args)
+  constexpr explicit expected(unexpect_t, std::initializer_list<U> ilist, Args &&... args)
     requires std::is_constructible_v<E, std::initializer_list<U> &, Args...>
   {
     unex_opt_.emplace(ilist, std::forward<Args>(args)...);
@@ -789,7 +792,7 @@ public:
     if (has_value()) {
       return expected<void, result_t>();
     }
-    return expected<void, result_t>(unexpect, std::invoke(std::forward<F>, error()));
+    return expected<void, result_t>(unexpect, std::invoke(std::forward<F>(f), error()));
   }
   template <typename F>
   constexpr auto transform_error(F && f) &
@@ -798,7 +801,7 @@ public:
     if (has_value()) {
       return expected<void, result_t>();
     }
-    return expected<void, result_t>(unexpect, std::invoke(std::forward<F>, error()));
+    return expected<void, result_t>(unexpect, std::invoke(std::forward<F>(f), error()));
   }
   template <typename F>
   constexpr auto transform_error(F && f) const && = delete;
@@ -809,7 +812,7 @@ public:
     if (has_value()) {
       return expected<void, result_t>();
     }
-    return expected<void, result_t>(unexpect, std::invoke(std::forward<F>, std::move(error())));
+    return expected<void, result_t>(unexpect, std::invoke(std::forward<F>(f), std::move(error())));
   }
 
   // modifiers
