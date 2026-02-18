@@ -364,7 +364,7 @@ constexpr std::compare_three_way_result_t<T, U> operator<=>(
 
 // non-member functions
 template <typename T>
-constexpr void swap(optional<T> & lhs, optional<T> rhs) noexcept(noexcept(lhs.swap(rhs)))
+constexpr void swap(optional<T> & lhs, optional<T> & rhs) noexcept(noexcept(lhs.swap(rhs)))
   requires std::is_move_constructible_v<T> && std::is_swappable_v<T>
 {
   lhs.swap(rhs);
