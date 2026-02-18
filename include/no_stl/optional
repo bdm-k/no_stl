@@ -205,13 +205,6 @@ public:
     return *this;
   }
 
-  // swap
-  constexpr void swap(optional & other) noexcept(
-    std::is_nothrow_move_constructible_v<T> && std::is_nothrow_swappable_v<T>)
-  {
-    opt_.swap(other.opt_);
-  }
-
   // observers
   constexpr const T * operator->() const noexcept { return &(*opt_); }
   constexpr T * operator->() noexcept { return &(*opt_); }
@@ -237,7 +230,26 @@ public:
   }
 
   // modifiers
+  constexpr void swap(optional & other) noexcept(
+    std::is_nothrow_move_constructible_v<T> && std::is_nothrow_swappable_v<T>)
+  {
+    opt_.swap(other.opt_);
+  }
+  
   constexpr void reset() noexcept { opt_.reset(); }
+
+  template <typename... Args>
+  T & emplace(Args &&... args)
+  {
+    return opt_.emplace(std::forward<Args>(args)...);
+    return *opt_;
+  }
+  template <typename U, typename... Args>
+  T & emplace(std::initializer_list<U> ilist, Args &&... args)
+  {
+    return opt_.emplace(ilist, std::forward<Args>(args)...);
+    return *opt_;
+  }
 };
 
 // deduction guide
