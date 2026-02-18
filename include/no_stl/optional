@@ -231,6 +231,7 @@ public:
 
   template <typename F>
   constexpr auto and_then(F && f) const &
+    requires detail::is_optional_v<std::remove_cvref_t<std::invoke_result_t<F, decltype(value())>>>
   {
     if (has_value()) {
       return std::invoke(std::forward<F>(f), value());
@@ -239,6 +240,7 @@ public:
   }
   template <typename F>
   constexpr auto and_then(F && f) &
+    requires detail::is_optional_v<std::remove_cvref_t<std::invoke_result_t<F, decltype(value())>>>
   {
     if (has_value()) {
       return std::invoke(std::forward<F>(f), value());
@@ -249,6 +251,8 @@ public:
   constexpr auto and_then(F && f) const && = delete;
   template <typename F>
   constexpr auto and_then(F && f) &&
+    requires detail::is_optional_v<
+      std::remove_cvref_t<std::invoke_result_t<F, decltype(std::move(value()))>>>
   {
     if (has_value()) {
       return std::invoke(std::forward<F>(f), std::move(value()));
@@ -305,21 +309,19 @@ public:
   {
     opt_.swap(other.opt_);
   }
-  
+
   constexpr void reset() noexcept { opt_.reset(); }
 
   template <typename... Args>
   T & emplace(Args &&... args)
   {
     return opt_.emplace(std::forward<Args>(args)...);
-    return *opt_;
   }
   template <typename U, typename... Args>
   T & emplace(std::initializer_list<U> ilist, Args &&... args)
     requires std::is_constructible_v<T, std::initializer_list<U> &, Args &&...>
   {
     return opt_.emplace(ilist, std::forward<Args>(args)...);
-    return *opt_;
   }
 };
 
