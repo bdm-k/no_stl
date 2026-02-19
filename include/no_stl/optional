@@ -90,9 +90,8 @@ public:
   // constructors
   constexpr optional() noexcept {}
   constexpr optional(std::nullopt_t) noexcept {}
-  constexpr optional(const optional & other) = default;
-  constexpr optional(optional && other) noexcept(std::is_nothrow_move_constructible<T>::value) =
-    default;
+  constexpr optional(const optional &) = default;
+  constexpr optional(optional &&) noexcept(std::is_nothrow_move_constructible<T>::value) = default;
   template <typename U>
   constexpr explicit(!std::is_convertible_v<const U &, T>) optional(const optional<U> & other)
     requires std::is_constructible_v<T, const U &> &&
@@ -154,8 +153,8 @@ public:
     opt_ = std::nullopt;
     return *this;
   }
-  constexpr optional & operator=(const optional & other) = default;
-  constexpr optional & operator=(optional && other) noexcept(
+  constexpr optional & operator=(const optional &) = default;
+  constexpr optional & operator=(optional &&) noexcept(
     std::is_nothrow_move_assignable_v<T> && std::is_nothrow_move_constructible_v<T>) = default;
   template <typename U>
   constexpr optional & operator=(const optional<U> & other)
